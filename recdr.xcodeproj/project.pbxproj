@@ -14,6 +14,8 @@
 		CD14D4B82B07A4E70081A908 /* recdrTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD14D4B72B07A4E70081A908 /* recdrTests.swift */; };
 		CD14D4C22B07A4E70081A908 /* recdrUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD14D4C12B07A4E70081A908 /* recdrUITests.swift */; };
 		CD14D4C42B07A4E70081A908 /* recdrUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD14D4C32B07A4E70081A908 /* recdrUITestsLaunchTests.swift */; };
+		CDE375E32B223A05008FD530 /* AudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE375E22B223A05008FD530 /* AudioSession.swift */; };
+		CDE375E52B223A54008FD530 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE375E42B223A54008FD530 /* AudioRecorder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		CD14D4BD2B07A4E70081A908 /* recdrUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = recdrUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD14D4C12B07A4E70081A908 /* recdrUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = recdrUITests.swift; sourceTree = "<group>"; };
 		CD14D4C32B07A4E70081A908 /* recdrUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = recdrUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		CDE375E22B223A05008FD530 /* AudioSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSession.swift; sourceTree = "<group>"; };
+		CDE375E42B223A54008FD530 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +102,8 @@
 				CD14D4A82B07A4E50081A908 /* ContentView.swift */,
 				CD14D4AA2B07A4E70081A908 /* Assets.xcassets */,
 				CD14D4AC2B07A4E70081A908 /* Preview Content */,
+				CDE375E22B223A05008FD530 /* AudioSession.swift */,
+				CDE375E42B223A54008FD530 /* AudioRecorder.swift */,
 			);
 			path = recdr;
 			sourceTree = "<group>";
@@ -259,6 +265,8 @@
 			files = (
 				CD14D4A92B07A4E50081A908 /* ContentView.swift in Sources */,
 				CD14D4A72B07A4E50081A908 /* recdrApp.swift in Sources */,
+				CDE375E52B223A54008FD530 /* AudioRecorder.swift in Sources */,
+				CDE375E32B223A05008FD530 /* AudioSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,6 +433,7 @@
 				DEVELOPMENT_TEAM = 84YBFP8AHS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access for uploading and processing audio";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -454,6 +463,7 @@
 				DEVELOPMENT_TEAM = 84YBFP8AHS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Need microphone access for uploading and processing audio";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
