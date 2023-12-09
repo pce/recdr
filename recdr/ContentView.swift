@@ -9,50 +9,49 @@ struct ContentView: View {
     @State private var playbackVolume: Float = 1.0
     
     var body: some View {
-        VStack {
-            Text("Recorder")
-                .padding()
-
-            Button(action: {
-                if audioRecorder.isRecording {
-                    audioRecorder.stopRecording()
-                } else {
-                    audioRecorder.record()
-                }
-            }) {
-                Text(audioRecorder.isRecording ? "Stop Recording" : "Start Recording")
+        NavigationView {
+            VStack {
+                Text("Recorder")
                     .padding()
-                    .background(audioRecorder.isRecording ? Color.red : Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
-            
-            Slider(value: $playbackVolume, in: 0...1)
-                .onChange(of: playbackVolume) { newVolume in
-                    audioPlayer?.volume = newVolume
-                }
 
-            List {
-                ForEach(audioRecorder.recordingsList, id: \.self) { recording in
-                    HStack {
-                        Text(recording.lastPathComponent)
-                        Spacer()
+                Button(action: {
+                    if audioRecorder.isRecording {
+                        audioRecorder.stopRecording()
+                    } else {
+                        audioRecorder.record()
+                    }
+                }) {
+                    Text(audioRecorder.isRecording ? "Stop Recording" : "Start Recording")
+                        .padding()
+                        .background(audioRecorder.isRecording ? Color.red : Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                }
+                
+                Slider(value: $playbackVolume, in: 0...1)
+                    .onChange(of: playbackVolume) { newVolume in
+                        audioPlayer?.volume = newVolume
+                    }
+
+                List {
+                    ForEach(audioRecorder.recordingsList, id: \.self) { recording in
+                        
                         if isPlaying && currentlyPlaying == recording {
                             Button("Stop") {
-                                audioPlayer?.pause()
-                                isPlaying = false
+                                stopPlayback()
+                            }
+                        } else {
+                            Button("Play") {
+                                playRecording(recording)
                             }
                         }
-                    }
-                    .onTapGesture {
-                        if currentlyPlaying == recording {
-                            stopPlayback()
-                        } else {
-                            playRecording(recording)
+                        NavigationLink(destination: AudioView(audioURL: recording)) {
+                            Text("Edit \(recording.lastPathComponent)")
                         }
-                    }
-                }.onDelete(perform: deleteRecording)
+                    }.onDelete(perform: deleteRecording)
+                }
             }
+            .navigationBarTitle("Recordings")
         }
         .onAppear {
             AudioSession.shared.requestRecordPermission { granted in
@@ -60,7 +59,7 @@ struct ContentView: View {
                     print("Permission granted")
                 } else {
                     print("Permission denied")
-                    // todo handle permission denied
+                    // TODO: Handle permission denied
                 }
             }
         }
@@ -78,26 +77,23 @@ struct ContentView: View {
         }
     }
     
-    
     func stopPlayback() {
         audioPlayer?.stop()
         isPlaying = false
         currentlyPlaying = nil
     }
 
-    
     func deleteRecording(at offsets: IndexSet) {
         for index in offsets {
-             let recording = audioRecorder.recordingsList[index]
-             do {
-                 try FileManager.default.removeItem(at: recording)
-                 audioRecorder.recordingsList.remove(at: index)
-             } catch {
-                 print("Error deleting recording: \(error)")
-             }
-         }
+            let recording = audioRecorder.recordingsList[index]
+            do {
+                try FileManager.default.removeItem(at: recording)
+                audioRecorder.recordingsList.remove(at: index)
+            } catch {
+                print("Error deleting recording: \(error)")
+            }
+        }
     }
-    
 }
 
 struct ContentView_Previews: PreviewProvider {
