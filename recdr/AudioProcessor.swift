@@ -93,23 +93,47 @@ class AudioProcessor: ObservableObject {
             print("Error starting recording: \(error)")
         }
     }
-    
 
     func stopRecordingAndSave() {
         print("Stop recording")
         recorder?.stop()
 
-        // Assuming recorder creates an AVAudioFile
-        if let recordedFileURL = recorder?.audioFile?.url {
-            let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let exportURL = documentsPath.appendingPathComponent("ExportedFile.m4a")
+        guard let recordedFileURL = recorder?.audioFile?.url else {
+            print("Recorded file URL is nil")
+            return
+        }
 
-            do {
-                try FileManager.default.copyItem(at: recordedFileURL, to: exportURL)
-                print("Exported to: \(exportURL)")
-            } catch {
-                print("Export failed: \(error)")
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let exportURL = documentsPath.appendingPathComponent("ExportedFile.wav")
+
+        do {
+            // Read the recorded audio data
+            let recordedFile = try AVAudioFile(forReading: recordedFileURL)
+
+            // Define the WAV file format with high-quality settings
+            guard let wavFormat = AVAudioFormat(standardFormatWithSampleRate: 44100.0, channels: 2) else {
+                print("Failed to create WAV format")
+                return
             }
+
+            // Create a buffer to hold the audio data
+            guard let buffer = AVAudioPCMBuffer(pcmFormat: recordedFile.processingFormat, frameCapacity: AVAudioFrameCount(recordedFile.length)) else {
+                print("Failed to create audio buffer")
+                return
+            }
+
+            // Read the audio data into the buffer
+            try recordedFile.read(into: buffer)
+
+            // Create a new file for writing in WAV format
+            let outputFile = try AVAudioFile(forWriting: exportURL, settings: wavFormat.settings)
+
+            // Write the buffer to the new file
+            try outputFile.write(from: buffer)
+
+            print("Exported to: \(exportURL)")
+        } catch {
+            print("Export failed: \(error)")
         }
     }
 
