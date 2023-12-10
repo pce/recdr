@@ -39,8 +39,6 @@ struct AudioView: View {
             }
             .padding()
 
-            // Add more sliders for other reverb parameters as needed
-
             Text("Delay Controls")
                 .font(.headline)
                 .padding()
