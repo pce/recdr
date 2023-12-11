@@ -14,6 +14,8 @@
 		CD14D4B82B07A4E70081A908 /* recdrTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD14D4B72B07A4E70081A908 /* recdrTests.swift */; };
 		CD14D4C22B07A4E70081A908 /* recdrUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD14D4C12B07A4E70081A908 /* recdrUITests.swift */; };
 		CD14D4C42B07A4E70081A908 /* recdrUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD14D4C32B07A4E70081A908 /* recdrUITestsLaunchTests.swift */; };
+		CD7564892B27BD1E00359E1A /* RecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7564882B27BD1E00359E1A /* RecordingListView.swift */; };
+		CD75648B2B27D70E00359E1A /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD75648A2B27D70E00359E1A /* ActivityViewController.swift */; };
 		CDA55AD42B24884700363060 /* AudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA55AD32B24884700363060 /* AudioView.swift */; };
 		CDE375E32B223A05008FD530 /* AudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE375E22B223A05008FD530 /* AudioSession.swift */; };
 		CDE375E52B223A54008FD530 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE375E42B223A54008FD530 /* AudioRecorder.swift */; };
@@ -50,6 +52,8 @@
 		CD14D4BD2B07A4E70081A908 /* recdrUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = recdrUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD14D4C12B07A4E70081A908 /* recdrUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = recdrUITests.swift; sourceTree = "<group>"; };
 		CD14D4C32B07A4E70081A908 /* recdrUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = recdrUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		CD7564882B27BD1E00359E1A /* RecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListView.swift; sourceTree = "<group>"; };
+		CD75648A2B27D70E00359E1A /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		CDA55AD32B24884700363060 /* AudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioView.swift; sourceTree = "<group>"; };
 		CDE375E22B223A05008FD530 /* AudioSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSession.swift; sourceTree = "<group>"; };
 		CDE375E42B223A54008FD530 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
@@ -115,6 +119,8 @@
 				CDE375E92B235385008FD530 /* FileImportView.swift */,
 				CDE375EB2B2353B2008FD530 /* AudioProcessor.swift */,
 				CDA55AD32B24884700363060 /* AudioView.swift */,
+				CD7564882B27BD1E00359E1A /* RecordingListView.swift */,
+				CD75648A2B27D70E00359E1A /* ActivityViewController.swift */,
 			);
 			path = recdr;
 			sourceTree = "<group>";
@@ -282,7 +288,9 @@
 			files = (
 				CD14D4A92B07A4E50081A908 /* ContentView.swift in Sources */,
 				CD14D4A72B07A4E50081A908 /* recdrApp.swift in Sources */,
+				CD7564892B27BD1E00359E1A /* RecordingListView.swift in Sources */,
 				CDE375E52B223A54008FD530 /* AudioRecorder.swift in Sources */,
+				CD75648B2B27D70E00359E1A /* ActivityViewController.swift in Sources */,
 				CDE375EA2B235385008FD530 /* FileImportView.swift in Sources */,
 				CDE375E32B223A05008FD530 /* AudioSession.swift in Sources */,
 				CDE375EC2B2353B2008FD530 /* AudioProcessor.swift in Sources */,
