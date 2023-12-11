@@ -3,10 +3,19 @@ import AVFoundation
 
 struct ContentView: View {
     @StateObject private var audioRecorder = AudioRecorder()
+    @StateObject private var audioProcessor = AudioProcessor()
+
     @State private var audioPlayer: AVAudioPlayer?
     @State private var isPlaying = false
     @State private var currentlyPlaying: URL?
     @State private var playbackVolume: Float = 1.0
+
+    init() {
+        _audioProcessor = StateObject(wrappedValue: AudioProcessor())
+        audioProcessor.onRecordingSaved = { [weak audioRecorder] in
+            audioRecorder?.updateRecordingsList()
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -33,23 +42,14 @@ struct ContentView: View {
                         audioPlayer?.volume = newVolume
                     }
 
-                List {
-                    ForEach(audioRecorder.recordingsList, id: \.self) { recording in
-                        
-                        if isPlaying && currentlyPlaying == recording {
-                            Button("Stop") {
-                                stopPlayback()
-                            }
-                        } else {
-                            Button("Play") {
-                                playRecording(recording)
-                            }
-                        }
-                        NavigationLink(destination: AudioView(audioURL: recording)) {
-                            Text("Edit \(recording.lastPathComponent)")
-                        }
-                    }.onDelete(perform: deleteRecording)
-                }
+                RecordingListView(
+                              audioRecorder: audioRecorder,
+                              playRecording: playRecording,
+                              stopPlayback: stopPlayback,
+                              deleteRecording: deleteRecording,
+                              isPlaying: isPlaying,
+                              currentlyPlaying: currentlyPlaying
+                          )
             }
             .navigationBarTitle("Recordings")
         }

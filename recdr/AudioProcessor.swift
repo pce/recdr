@@ -10,6 +10,8 @@ class AudioProcessor: ObservableObject {
     var delay: Delay?
     var recorder: NodeRecorder?
     
+    var onRecordingSaved: (() -> Void)?
+    
     @Published var selectedReverbPreset: AVAudioUnitReverbPreset = .smallRoom {
         didSet {
             reverb?.loadFactoryPreset(selectedReverbPreset)
@@ -103,8 +105,14 @@ class AudioProcessor: ObservableObject {
             return
         }
 
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd-HHmmss"
+        let dateString = dateFormatter.string(from: Date())
+        let audioFileName = "\(dateString).wav"
+
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let exportURL = documentsPath.appendingPathComponent("ExportedFile.wav")
+        let exportURL = documentsPath.appendingPathComponent(audioFileName)
+
 
         do {
             // Read the recorded audio data
@@ -135,6 +143,11 @@ class AudioProcessor: ObservableObject {
         } catch {
             print("Export failed: \(error)")
         }
+        
+        DispatchQueue.main.async {
+             self.onRecordingSaved?()
+         }
+        
     }
 
 }

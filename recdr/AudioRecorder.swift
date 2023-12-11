@@ -8,6 +8,17 @@ class AudioRecorder: ObservableObject {
 
     var audioEngine: AVAudioEngine?
     var audioPlayerNode: AVAudioPlayerNode?
+    
+
+    func updateRecordingsList() {
+        let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        do {
+            let urls = try FileManager.default.contentsOfDirectory(at: documentsPath, includingPropertiesForKeys: nil)
+            recordingsList = urls.filter { $0.pathExtension == "wav" }
+        } catch {
+            print("Failed to fetch recordings: \(error)")
+        }
+    }
 
     func startMonitoring() {
         audioEngine = AVAudioEngine()
@@ -33,11 +44,12 @@ class AudioRecorder: ObservableObject {
             print("Error starting audio engine: \(error)")
         }
     }
+    
     init() {
         fetchRecordings()
     }
     
-    private func fetchRecordings() {
+    func fetchRecordings() {
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         do {
             let urls = try FileManager.default.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)
