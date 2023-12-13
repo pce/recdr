@@ -76,6 +76,27 @@ struct AudioView: View {
                     }
                     .padding()
                     
+                    
+                    // Slider with label and value
+//                    VStack(alignment: .leading) {
+//                        Text("Dry/Wet Mix")
+//                            .font(.headline)
+//                            .padding([.top, .leading])
+//
+//                        HStack {
+//                            Slider(value: Binding(get: {
+//                                audioProcessor.reverb?.dryWetMix ?? 0.5
+//                            }, set: { newVal in
+//                                audioProcessor.reverb?.dryWetMix = newVal
+//                            }), in: 0...1, step: 0.1)
+//
+//                            Text("\(audioProcessor.reverb?.dryWetMix ?? 0.5, specifier: "%.2f")")
+//                                .frame(width: 50, alignment: .trailing)
+//                        }
+//                        .padding([.leading, .trailing])
+//                    }
+
+                    
                     Text("Delay Controls")
                         .font(.headline)
                         .padding()
@@ -91,7 +112,7 @@ struct AudioView: View {
                     HStack {
                         Text("Feedback")
                         Slider(value: Binding(get: {
-                            audioProcessor.delay?.feedback ?? 50.0
+                            audioProcessor.delay?.feedback ?? 0.0
                         }, set: { newVal in
                             audioProcessor.delay?.feedback = newVal
                         }), in: -100...100, step: 1.0)
@@ -107,9 +128,7 @@ struct AudioView: View {
                     }
                     .padding()
 
-                    
                     DisclosureGroup("Time Pitch", isExpanded: $isTimePitchExpanded) {
-                        
                         HStack {
                             Text("Pitch")
                             Slider(value: Binding(get: {
@@ -130,10 +149,9 @@ struct AudioView: View {
                     }
                     
                     .padding()
-                    
-                    
+
                     DisclosureGroup("Compressor Controls", isExpanded: $isCompressorExpanded) {
-                        
+
                         HStack {
                             Text("Attack Time")
                             Slider(value: Binding(get: {

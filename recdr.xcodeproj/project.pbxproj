@@ -16,6 +16,9 @@
 		CD14D4C42B07A4E70081A908 /* recdrUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD14D4C32B07A4E70081A908 /* recdrUITestsLaunchTests.swift */; };
 		CD7564892B27BD1E00359E1A /* RecordingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7564882B27BD1E00359E1A /* RecordingListView.swift */; };
 		CD75648B2B27D70E00359E1A /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD75648A2B27D70E00359E1A /* ActivityViewController.swift */; };
+		CD7A6D672B29EBA20088A0FF /* XYPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7A6D662B29EBA20088A0FF /* XYPadView.swift */; };
+		CD7A6D692B29FECE0088A0FF /* WaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7A6D682B29FECE0088A0FF /* WaveformView.swift */; };
+		CD7A6D6D2B2A56610088A0FF /* LabeledSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7A6D6C2B2A56610088A0FF /* LabeledSlider.swift */; };
 		CDA55AD42B24884700363060 /* AudioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA55AD32B24884700363060 /* AudioView.swift */; };
 		CDE375E32B223A05008FD530 /* AudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE375E22B223A05008FD530 /* AudioSession.swift */; };
 		CDE375E52B223A54008FD530 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE375E42B223A54008FD530 /* AudioRecorder.swift */; };
@@ -54,6 +57,9 @@
 		CD14D4C32B07A4E70081A908 /* recdrUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = recdrUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CD7564882B27BD1E00359E1A /* RecordingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingListView.swift; sourceTree = "<group>"; };
 		CD75648A2B27D70E00359E1A /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
+		CD7A6D662B29EBA20088A0FF /* XYPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XYPadView.swift; sourceTree = "<group>"; };
+		CD7A6D682B29FECE0088A0FF /* WaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaveformView.swift; sourceTree = "<group>"; };
+		CD7A6D6C2B2A56610088A0FF /* LabeledSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledSlider.swift; sourceTree = "<group>"; };
 		CDA55AD32B24884700363060 /* AudioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioView.swift; sourceTree = "<group>"; };
 		CDE375E22B223A05008FD530 /* AudioSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSession.swift; sourceTree = "<group>"; };
 		CDE375E42B223A54008FD530 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
@@ -118,7 +124,10 @@
 				CDE375E42B223A54008FD530 /* AudioRecorder.swift */,
 				CDE375E92B235385008FD530 /* FileImportView.swift */,
 				CDE375EB2B2353B2008FD530 /* AudioProcessor.swift */,
+				CD7A6D682B29FECE0088A0FF /* WaveformView.swift */,
+				CD7A6D662B29EBA20088A0FF /* XYPadView.swift */,
 				CDA55AD32B24884700363060 /* AudioView.swift */,
+				CD7A6D6C2B2A56610088A0FF /* LabeledSlider.swift */,
 				CD7564882B27BD1E00359E1A /* RecordingListView.swift */,
 				CD75648A2B27D70E00359E1A /* ActivityViewController.swift */,
 			);
@@ -287,8 +296,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD14D4A92B07A4E50081A908 /* ContentView.swift in Sources */,
+				CD7A6D692B29FECE0088A0FF /* WaveformView.swift in Sources */,
+				CD7A6D6D2B2A56610088A0FF /* LabeledSlider.swift in Sources */,
 				CD14D4A72B07A4E50081A908 /* recdrApp.swift in Sources */,
 				CD7564892B27BD1E00359E1A /* RecordingListView.swift in Sources */,
+				CD7A6D672B29EBA20088A0FF /* XYPadView.swift in Sources */,
 				CDE375E52B223A54008FD530 /* AudioRecorder.swift in Sources */,
 				CD75648B2B27D70E00359E1A /* ActivityViewController.swift in Sources */,
 				CDE375EA2B235385008FD530 /* FileImportView.swift in Sources */,

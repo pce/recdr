@@ -38,8 +38,10 @@ struct WaveformView: View {
         }
         .onAppear {
             if let samples = loadAudioSamples(from: audioURL) {
+                print("Loaded samples: \(samples.count)")
                 self.waveformSamples = samples
-            }        }
+            }
+        }
     }
 
     func processBuffer(_ buffer: AVAudioPCMBuffer) -> [Float] {
@@ -56,7 +58,7 @@ struct WaveformView: View {
     }
     
     func downsample(_ data: UnsafeBufferPointer<Float>, to numberOfPoints: Int) -> [Float] {
-        // Implement the logic to downsample the data        
+        // Implement the logic to downsample the data
         let length = data.count
         let binSize = length / numberOfPoints
         var downsampledData = [Float]()
@@ -101,7 +103,7 @@ struct WaveformView: View {
 struct WaveformView_Previews: PreviewProvider {
     static var previews: some View {
         WaveformView(
-            audioURL: URL(fileURLWithPath: "/Users/patrick/Library/Developer/CoreSimulator/Devices/12C4F90B-DA5C-45A9-BE6C-258F14E31EB5/data/Containers/Data/Application/796816CE-0677-4A05-B677-13EA37AD7B6B/Documents/pitchPanXY20231213-155450.wav"),
+            audioURL: URL(fileURLWithPath: "/Users/patrick/Library/Developer/CoreSimulator/Devices/12C4F90B-DA5C-45A9-BE6C-258F14E31EB5/data/Containers/Data/Application/796816CE-0677-4A05-B677-13EA37AD7B6B/Documents/20231213-013800.wav"),
             cursorPosition: .constant(0.5) // Dummy binding for preview
         )
     }
