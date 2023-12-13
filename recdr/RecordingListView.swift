@@ -1,9 +1,25 @@
 import SwiftUI
 
+struct NavigationDestinationLink: Identifiable, Hashable {
+    let id: UUID = UUID()
+    let url: URL
+    
+    // Implementing the hash function
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    // Implementing the equality operator
+    static func ==(lhs: NavigationDestinationLink, rhs: NavigationDestinationLink) -> Bool {
+        lhs.id == rhs.id
+    }
+}
 struct RecordingListView: View {
     @ObservedObject var audioRecorder: AudioRecorder
     @State private var showShareSheet = false
     @State private var itemToShare: URL?
+    @State private var selectedRecording: NavigationDestinationLink?
+    @State private var isNavigationLinkActive = false
+    
     
     var playRecording: (URL) -> Void
     var stopPlayback: () -> Void
@@ -28,6 +44,10 @@ struct RecordingListView: View {
                     Spacer()
                     
                     Text(recording.lastPathComponent)
+                        .onTapGesture {
+                            self.selectedRecording = NavigationDestinationLink(url: recording)
+                            self.isNavigationLinkActive = true
+                        }
                     
                     Button(action: {
                         itemToShare = recording
@@ -37,13 +57,28 @@ struct RecordingListView: View {
                     }
                     .buttonStyle(PlainButtonStyle())
                     
-                    NavigationLink(destination: AudioView(audioURL: recording)) {
-                        Image(systemName: "waveform.circle.fill")
-                        
-                    }.allowsHitTesting(false)
-                        .buttonStyle(PlainButtonStyle())
+                    
+                    Image(systemName: "waveform.circle.fill")
+                        .onTapGesture {
+                            self.selectedRecording = NavigationDestinationLink(url: recording)
+                            self.isNavigationLinkActive = true
+                        }
+                    
+                    // Workarround with invisible NavigationLink
+                    NavigationLink(
+                        destination: AudioView(audioURL: recording),
+                        isActive: $isNavigationLinkActive
+                    ) {
+                        EmptyView()
+                    }
+                    .frame(width: 0, height: 0)
+                    .hidden()
+                    
                 }
             }.onDelete(perform: deleteRecording)
+        }
+        .navigationDestination(for: NavigationDestinationLink.self) { link in
+            AudioView(audioURL: link.url)
         }
         .sheet(isPresented: $showShareSheet, content: {
             if let itemToShare = itemToShare {

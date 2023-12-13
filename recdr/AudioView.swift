@@ -19,8 +19,7 @@ struct AudioView: View {
     @State private var xyPadPosition: CGPoint = CGPoint(x: 0.5, y: 0.5)
     
     let parameterOptions = ["Pan", "Filter", "Pitch"]
-    
-    
+
     var audioURL: URL
     
     
@@ -98,6 +97,16 @@ struct AudioView: View {
                         }), in: -100...100, step: 1.0)
                     }
                     .padding()
+                    HStack {
+                        Text("lowPassCutoff")
+                        Slider(value: Binding(get: {
+                            audioProcessor.delay?.lowPassCutoff ?? 80
+                        }, set: { newVal in
+                            audioProcessor.delay?.lowPassCutoff = newVal
+                        }), in: 10...200, step: 0.5)
+                    }
+                    .padding()
+
                     
                     DisclosureGroup("Time Pitch", isExpanded: $isTimePitchExpanded) {
                         
@@ -122,15 +131,6 @@ struct AudioView: View {
                     
                     .padding()
                     
-                    HStack {
-                        Text("lowPassCutoff")
-                        Slider(value: Binding(get: {
-                            audioProcessor.delay?.lowPassCutoff ?? 15000.0
-                        }, set: { newVal in
-                            audioProcessor.delay?.lowPassCutoff = newVal
-                        }), in: 10...22050, step: 1.0)
-                    }
-                    .padding()
                     
                     DisclosureGroup("Compressor Controls", isExpanded: $isCompressorExpanded) {
                         
@@ -276,7 +276,10 @@ struct AudioView: View {
         case "Pan":
             let panValue = (xValue * 2) - 1 // Convert from 0...1 to -1...1
             audioProcessor.pan = panValue
-            //            case "Filter":
+        case "Filter":
+            // 10 to 200 (Default: 80)
+            let filterValue = (xValue * 190) + 10
+            audioProcessor.delay?.lowPassCutoff = filterValue
         case "Pitch":
             let pitchValue = (xValue * 4800) - 2400 // Convert from 0...1 to -2400...2400
             audioProcessor.timePitch?.pitch = pitchValue
@@ -288,7 +291,10 @@ struct AudioView: View {
         case "Pan":
             let panValue = (yValue * 2) - 1 // Convert from 0...1 to -1...1
             audioProcessor.pan = panValue
-            //            case "Filter":
+        case "Filter":
+            // 10 to 200 (Default: 80)
+            let filterValue = (yValue * 190) + 10
+            audioProcessor.delay?.lowPassCutoff = filterValue
         case "Pitch":
             let pitchValue = (yValue * 4800) - 2400 // Convert from 0...1 to -2400...2400
             audioProcessor.timePitch?.pitch = pitchValue
