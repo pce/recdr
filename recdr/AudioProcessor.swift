@@ -14,7 +14,12 @@ class AudioProcessor: ObservableObject {
     var limiter: PeakLimiter?
     
 //    var is3DSoundEnabled = false
-    
+    var pan: AUValue = 0.0 {
+        didSet {
+            mixer?.pan = pan
+        }
+    }
+
     var onRecordingSaved: (() -> Void)?
     
     @Published var isRecording = false
@@ -24,6 +29,7 @@ class AudioProcessor: ObservableObject {
             reverb?.loadFactoryPreset(selectedReverbPreset)
         }
     }
+    
     
     init() {
         setupAudioChain()

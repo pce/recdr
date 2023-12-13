@@ -8,9 +8,18 @@ struct AudioView: View {
     @State private var isTimePitchExpanded = false
     @State private var isCompressorExpanded = false
     @State private var isLimiterExpanded = false
-
-//    @State private var is3DSoundExpanded = false
-//    @State private var is3DSoundEnabled = false
+    @State private var panValue: AUValue = 0.0  //  -1 (left) to 1 (right)
+    
+    @State private var waveformCursorPosition: CGFloat = 0.0
+    
+    //    @State private var is3DSoundExpanded = false
+    //    @State private var is3DSoundEnabled = false
+    @State private var xParameter: String = "Pan"
+    @State private var yParameter: String = "Filter"
+    @State private var xyPadPosition: CGPoint = CGPoint(x: 0.5, y: 0.5)
+    
+    let parameterOptions = ["Pan", "Filter", "Pitch"]
+    
     
     var audioURL: URL
     
@@ -37,7 +46,11 @@ struct AudioView: View {
                 }
                 
             }
-            
+
+            HStack {
+                WaveformView(audioURL: audioURL, cursorPosition: $waveformCursorPosition)
+                       .frame(height: 100) 
+            }
             
             ScrollView {
                 VStack {
@@ -215,20 +228,72 @@ struct AudioView: View {
                         }
                     }
                     .padding()
-//                    DisclosureGroup("3D Sound Controls", isExpanded: $is3DSoundExpanded) {
-//                         Toggle("Enable 3D Sound", isOn: $is3DSoundEnabled)
-//                         
-//                         if is3DSoundEnabled {
-//                            // XY Pad?
-//                         }
-//                     }
-//                     .padding()
+                    //                    DisclosureGroup("3D Sound Controls", isExpanded: $is3DSoundExpanded) {
+                    //                         Toggle("Enable 3D Sound", isOn: $is3DSoundEnabled)
+                    //
+                    //                         if is3DSoundEnabled {
+                    //                            // XY Pad?
+                    //                         }
+                    //                     }
+                    //                     .padding()
+                    
+                    VStack {
+                        Picker("X Axis", selection: $xParameter) {
+                            ForEach(parameterOptions, id: \.self) {
+                                Text($0)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        
+                        Picker("Y Axis", selection: $yParameter) {
+                            ForEach(parameterOptions, id: \.self) {
+                                Text($0)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        
+                        XYPadView(position: $xyPadPosition)
+                            .frame(width: 300, height: 300)
+                            .padding()
+                            .onChange(of: xyPadPosition) { newPosition in
+                                updateAudioParameters(xParam: xParameter, yParam: yParameter, position: newPosition)
+                            }
+                    }
                 }
             }
-
+            
         }
         .onAppear {
             audioProcessor.importAudio(url: audioURL)
+        }
+    }
+    
+    func updateAudioParameters(xParam: String, yParam: String, position: CGPoint) {
+        let xValue = Float(position.x)
+        let yValue = Float(position.y)
+        
+        switch xParam {
+        case "Pan":
+            let panValue = (xValue * 2) - 1 // Convert from 0...1 to -1...1
+            audioProcessor.pan = panValue
+            //            case "Filter":
+        case "Pitch":
+            let pitchValue = (xValue * 4800) - 2400 // Convert from 0...1 to -2400...2400
+            audioProcessor.timePitch?.pitch = pitchValue
+        default:
+            break
+        }
+        
+        switch yParam {
+        case "Pan":
+            let panValue = (yValue * 2) - 1 // Convert from 0...1 to -1...1
+            audioProcessor.pan = panValue
+            //            case "Filter":
+        case "Pitch":
+            let pitchValue = (yValue * 4800) - 2400 // Convert from 0...1 to -2400...2400
+            audioProcessor.timePitch?.pitch = pitchValue
+        default:
+            break
         }
     }
 }

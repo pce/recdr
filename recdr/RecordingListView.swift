@@ -4,6 +4,7 @@ struct RecordingListView: View {
     @ObservedObject var audioRecorder: AudioRecorder
     @State private var showShareSheet = false
     @State private var itemToShare: URL?
+    
     var playRecording: (URL) -> Void
     var stopPlayback: () -> Void
     var deleteRecording: (IndexSet) -> Void
@@ -14,17 +15,19 @@ struct RecordingListView: View {
         List {
             ForEach(audioRecorder.recordingsList, id: \.self) { recording in
                 HStack {
-                    VStack(alignment: .leading) {
-                        Text(recording.lastPathComponent)
-                            .onTapGesture {
-//                                if isPlaying && currentlyPlaying == recording {
-//                                    stopPlayback()
-//                                } else {
-                                    playRecording(recording)
-//                                }
-                            }
+                    Spacer()
+                    Button(action: {
+                        if isPlaying && currentlyPlaying == recording {
+                            stopPlayback()
+                        } else {
+                            playRecording(recording)
+                        }
+                    }) {
+                        Image(systemName: isPlaying && currentlyPlaying == recording ? "stop.fill" : "play.fill")
                     }
                     Spacer()
+                    
+                    Text(recording.lastPathComponent)
                     
                     Button(action: {
                         itemToShare = recording
@@ -35,9 +38,10 @@ struct RecordingListView: View {
                     .buttonStyle(PlainButtonStyle())
                     
                     NavigationLink(destination: AudioView(audioURL: recording)) {
-                        Text("Edit")
-                    }
-                    .buttonStyle(PlainButtonStyle())
+                        Image(systemName: "waveform.circle.fill")
+                        
+                    }.allowsHitTesting(false)
+                        .buttonStyle(PlainButtonStyle())
                 }
             }.onDelete(perform: deleteRecording)
         }
@@ -53,7 +57,7 @@ struct RecordingListView: View {
                         // Swipe Up - Ignore
                     } else if value.translation.height > 0 && abs(value.translation.width) < abs(value.translation.height) {
                         // Swipe Down - Refresh
-                        audioRecorder.fetchRecordings()  // Make sure fetchRecordings is accessible
+                        audioRecorder.fetchRecordings()
                     }
                 }
         )

@@ -20,8 +20,6 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Text("Recorder")
-                    .padding()
 
                 Button(action: {
                     if audioRecorder.isRecording {
@@ -37,10 +35,10 @@ struct ContentView: View {
                         .cornerRadius(8)
                 }
                 
-                Slider(value: $playbackVolume, in: 0...1)
-                    .onChange(of: playbackVolume) { newVolume in
-                        audioPlayer?.volume = newVolume
-                    }
+//                Slider(value: $playbackVolume, in: 0...1)
+//                    .onChange(of: playbackVolume) { newVolume in
+//                        audioPlayer?.volume = newVolume
+//                    }
 
                 RecordingListView(
                               audioRecorder: audioRecorder,
@@ -51,7 +49,7 @@ struct ContentView: View {
                               currentlyPlaying: currentlyPlaying
                           )
             }
-            .navigationBarTitle("Recordings")
+//            .navigationBarTitle("Recordings")
         }
         .onAppear {
             AudioSession.shared.requestRecordPermission { granted in
