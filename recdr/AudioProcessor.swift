@@ -9,8 +9,15 @@ class AudioProcessor: ObservableObject {
     var reverb: Reverb?
     var delay: Delay?
     var recorder: NodeRecorder?
+    var timePitch: TimePitch?
+    var compressor: Compressor?
+    var limiter: PeakLimiter?
+    
+//    var is3DSoundEnabled = false
     
     var onRecordingSaved: (() -> Void)?
+    
+    @Published var isRecording = false
     
     @Published var selectedReverbPreset: AVAudioUnitReverbPreset = .smallRoom {
         didSet {
@@ -30,7 +37,14 @@ class AudioProcessor: ObservableObject {
             print("Player is not initialized")
             return
         }
-        reverb = Reverb(player)
+        
+        timePitch = TimePitch(player)
+        guard let timePitch = timePitch else {
+            print("TimePitch is not initialized")
+            return
+        }
+        reverb = Reverb(timePitch)
+
         guard let reverb = reverb else {
             print("Reverb is not initialized")
             return
@@ -41,8 +55,19 @@ class AudioProcessor: ObservableObject {
             return
         }
 
+        compressor = Compressor(delay)
+        guard let compressor = compressor else {
+            print("Compressor is not initialized")
+            return
+        }
+        limiter = PeakLimiter(compressor)
+        guard let limiter = limiter else {
+            print("Limiter is not initialized")
+            return
+        }
+
         // Ensure mixer is properly initialized
-        mixer = Mixer(delay)
+        mixer = Mixer(limiter)
 
         // Connect the mixer to the engine's output
         if let mixer = mixer {
@@ -91,6 +116,7 @@ class AudioProcessor: ObservableObject {
         print("Starting recording")
         do {
             try recorder?.record()
+            isRecording = true
         } catch {
             print("Error starting recording: \(error)")
         }
@@ -99,7 +125,8 @@ class AudioProcessor: ObservableObject {
     func stopRecordingAndSave() {
         print("Stop recording")
         recorder?.stop()
-
+        isRecording = false
+        
         guard let recordedFileURL = recorder?.audioFile?.url else {
             print("Recorded file URL is nil")
             return

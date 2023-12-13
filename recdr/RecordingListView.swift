@@ -14,23 +14,30 @@ struct RecordingListView: View {
         List {
             ForEach(audioRecorder.recordingsList, id: \.self) { recording in
                 HStack {
-                    if isPlaying && currentlyPlaying == recording {
-                        Button("Stop", action: stopPlayback)
-                    } else {
-                        Button("Play") {
-                            playRecording(recording)
-                        }
+                    VStack(alignment: .leading) {
+                        Text(recording.lastPathComponent)
+                            .onTapGesture {
+//                                if isPlaying && currentlyPlaying == recording {
+//                                    stopPlayback()
+//                                } else {
+                                    playRecording(recording)
+//                                }
+                            }
                     }
                     Spacer()
-                     Button(action: {
-                         itemToShare = recording
-                         showShareSheet = true
-                     }) {
-                         Image(systemName: "square.and.arrow.up")
-                     }
-                    NavigationLink(destination: AudioView(audioURL: recording)) {
-                        Text("Edit \(recording.lastPathComponent)")
+                    
+                    Button(action: {
+                        itemToShare = recording
+                        showShareSheet = true
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
                     }
+                    .buttonStyle(PlainButtonStyle())
+                    
+                    NavigationLink(destination: AudioView(audioURL: recording)) {
+                        Text("Edit")
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }.onDelete(perform: deleteRecording)
         }

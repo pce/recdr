@@ -73,6 +73,8 @@ struct ContentView: View {
             isPlaying = true
             currentlyPlaying = url
         } catch {
+            isPlaying = false
+            currentlyPlaying = nil
             print("Playback failed: \(error)")
         }
     }
