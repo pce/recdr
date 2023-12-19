@@ -6,56 +6,64 @@ struct RecordingListView: View {
     @State private var itemToShare: URL?
     @State private var selectedRecording: URL?
     @State private var isNavigationLinkActive = false
-
+    
     var playRecording: (URL) -> Void
     var stopPlayback: () -> Void
     var deleteRecording: (IndexSet) -> Void
     var isPlaying: Bool
     var currentlyPlaying: URL?
-
+    
     var body: some View {
         List {
             ForEach(audioRecorder.recordingsList, id: \.self) { recording in
-                HStack {
-                    Spacer()
+                VStack {
                     
-                    Button(action: {
-                        if isPlaying && currentlyPlaying == recording {
-                            stopPlayback()
-                        } else {
-                            playRecording(recording)
+                    HStack {
+                                                
+                        Button(action: {
+                            if isPlaying && currentlyPlaying == recording {
+                                stopPlayback()
+                            } else {
+                                playRecording(recording)
+                            }
+                        }) {
+                            Image(systemName: isPlaying && currentlyPlaying == recording ? "stop.fill" : "play.fill")
                         }
-                    }) {
-                        Image(systemName: isPlaying && currentlyPlaying == recording ? "stop.fill" : "play.fill")
+                        
+                        Button(action: {
+                            itemToShare = recording
+                            showShareSheet = true
+                        }) {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        Spacer()
+                        
+                        
                     }
                     
-                    Spacer()
-                    
-                    Text(recording.lastPathComponent)
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        itemToShare = recording
-                        showShareSheet = true
-                    }) {
-                        Image(systemName: "square.and.arrow.up")
+                    HStack {
+                        
+                        Text(recording.lastPathComponent)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            self.selectedRecording = recording
+                            self.isNavigationLinkActive = true
+                        }) {
+                            Image(systemName: "waveform.circle.fill")
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
-                    .buttonStyle(PlainButtonStyle())
-
-                    Button(action: {
-                        self.selectedRecording = recording
-                        self.isNavigationLinkActive = true
-                    }) {
-                        Image(systemName: "waveform.circle.fill")
-                    }
-                    .buttonStyle(PlainButtonStyle())
+                    
                 }
                 .background(
                     NavigationLink(destination: AudioView(audioURL: recording), isActive: $isNavigationLinkActive) {
                         EmptyView()
                     }
-                    .hidden()
+                        .hidden()
                 )
             }
             .onDelete(perform: deleteRecording)
