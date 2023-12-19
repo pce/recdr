@@ -21,8 +21,12 @@ struct XYPadView: View {
             .gesture(
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
-                        let x = value.location.x / geometry.size.width
-                        let y = value.location.y / geometry.size.height
+                        var x = value.location.x / geometry.size.width
+                        var y = value.location.y / geometry.size.height
+                        // Clamp values that pointer's position is in bounds of the Pad
+                        x = max(0, min(x, 1))
+                        y = max(0, min(y, 1))
+                        
                         position = CGPoint(x: x, y: y)
                     }
             )
