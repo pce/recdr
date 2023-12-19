@@ -21,19 +21,21 @@ struct WaveformView: View {
                 // Draw waveform here using context
                 let widthPerSample = size.width / CGFloat(waveformSamples.count)
                 
+                
                 for (index, sample) in waveformSamples.enumerated() {
                     let x = CGFloat(index) * widthPerSample
-                    let amplitude = CGFloat(sample) // Normalize this value to your view's height
+                    let normalizedSample = (sample + 1) / 2 // Normalize from -1...1 to 0...1
+                    let amplitude = CGFloat(normalizedSample) * size.height
                     let rect = CGRect(x: x, y: (size.height - amplitude) / 2, width: widthPerSample, height: amplitude)
                     context.fill(Path(rect), with: .color(.gray))
                 }
                 
                 // Draw cursor
-                let cursorX = cursorPosition * size.width
-                context.stroke(
-                    Path(CGRect(x: cursorX, y: 0, width: 1, height: size.height)),
-                    with: .color(.red)
-                )
+//                let cursorX = cursorPosition * size.width
+//                context.stroke(
+//                    Path(CGRect(x: cursorX, y: 0, width: 1, height: size.height)),
+//                    with: .color(.red)
+//                )
             }
         }
         .onAppear {
@@ -43,7 +45,7 @@ struct WaveformView: View {
             }
         }
     }
-
+    
     func processBuffer(_ buffer: AVAudioPCMBuffer) -> [Float] {
         guard let channelData = buffer.floatChannelData else {
             return []
@@ -76,7 +78,7 @@ struct WaveformView: View {
         do {
             // Load the audio file
             let file = try AVAudioFile(forReading: url)
-
+            
             // Safely unwrap the AVAudioFormat
             guard let format = AVAudioFormat(standardFormatWithSampleRate: file.fileFormat.sampleRate, channels: file.fileFormat.channelCount) else {
                 print("Error: Failed to create AVAudioFormat")
@@ -86,10 +88,10 @@ struct WaveformView: View {
             guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(file.length)) else {
                 return nil
             }
-
+            
             // Read the entire file into the buffer
             try file.read(into: buffer)
-
+            
             // Process the buffer to get the samples
             return processBuffer(buffer)
         } catch {
