@@ -5,6 +5,8 @@ struct AudioView: View {
     @StateObject private var audioProcessor = AudioProcessor()
     @State private var isPlaying = false
     // collapsible
+    @State private var isRevExpanded = false
+    @State private var isDelayExpanded = false
     @State private var isTimePitchExpanded = false
     @State private var isCompressorExpanded = false
     @State private var isLimiterExpanded = false
@@ -19,7 +21,7 @@ struct AudioView: View {
     @State private var xyPadPosition: CGPoint = CGPoint(x: 0.5, y: 0.5)
     
     let parameterOptions = ["Pan", "Filter", "Pitch"]
-
+    
     var audioURL: URL
     
     
@@ -36,98 +38,109 @@ struct AudioView: View {
             
             
             if audioProcessor.isRecording {
-                Button("Stop Recording") {
+                Button("Stop Render to File") {
                     audioProcessor.stopRecordingAndSave()
                 }
             } else {
-                Button("Start Recording") {
+                Button("Realtime Render to File") {
                     audioProcessor.startRecording()
                 }
                 
             }
-
+            
             HStack {
                 WaveformView(audioURL: audioURL, cursorPosition: $waveformCursorPosition)
-                       .frame(height: 100) 
+                    .frame(height: 100)
             }
             
             ScrollView {
                 VStack {
                     
-                    Text("Reverb Controls")
-                        .font(.headline)
-                        .padding()
                     
-                    
-                    Picker("Reverb Preset", selection: $audioProcessor.selectedReverbPreset) {
-                        ForEach(AVAudioUnitReverbPreset.allCases, id: \.self) { preset in
-                            Text(preset.name).tag(preset)
+                    DisclosureGroup("Reverb Controls", isExpanded: $isRevExpanded) {
+                        
+                        //                    Text("Reverb Controls")
+                        //                        .font(.headline)
+                        //                        .padding()
+                        
+                        
+                        Picker("Reverb Preset", selection: $audioProcessor.selectedReverbPreset) {
+                            ForEach(AVAudioUnitReverbPreset.allCases, id: \.self) { preset in
+                                Text(preset.name).tag(preset)
+                            }
                         }
+                        .pickerStyle(MenuPickerStyle())
+                        
+                        HStack {
+                            Text("Dry/Wet Mix")
+                            Slider(value: Binding(get: {
+                                audioProcessor.reverb?.dryWetMix ?? 0.5
+                            }, set: { newVal in
+                                audioProcessor.reverb?.dryWetMix = newVal
+                            }), in: 0...1, step: 0.1)
+                        }
+                        .padding()
                     }
-                    .pickerStyle(MenuPickerStyle())
-                    
-                    HStack {
-                        Text("Dry/Wet Mix")
-                        Slider(value: Binding(get: {
-                            audioProcessor.reverb?.dryWetMix ?? 0.5
-                        }, set: { newVal in
-                            audioProcessor.reverb?.dryWetMix = newVal
-                        }), in: 0...1, step: 0.1)
-                    }
-                    .padding()
-                    
                     
                     // Slider with label and value
-//                    VStack(alignment: .leading) {
-//                        Text("Dry/Wet Mix")
-//                            .font(.headline)
-//                            .padding([.top, .leading])
-//
-//                        HStack {
-//                            Slider(value: Binding(get: {
-//                                audioProcessor.reverb?.dryWetMix ?? 0.5
-//                            }, set: { newVal in
-//                                audioProcessor.reverb?.dryWetMix = newVal
-//                            }), in: 0...1, step: 0.1)
-//
-//                            Text("\(audioProcessor.reverb?.dryWetMix ?? 0.5, specifier: "%.2f")")
-//                                .frame(width: 50, alignment: .trailing)
-//                        }
-//                        .padding([.leading, .trailing])
-//                    }
-
+                    //                    VStack(alignment: .leading) {
+                    //                        Text("Dry/Wet Mix")
+                    //                            .font(.headline)
+                    //                            .padding([.top, .leading])
+                    //
+                    //                        HStack {
+                    //                            Slider(value: Binding(get: {
+                    //                                audioProcessor.reverb?.dryWetMix ?? 0.5
+                    //                            }, set: { newVal in
+                    //                                audioProcessor.reverb?.dryWetMix = newVal
+                    //                            }), in: 0...1, step: 0.1)
+                    //
+                    //                            Text("\(audioProcessor.reverb?.dryWetMix ?? 0.5, specifier: "%.2f")")
+                    //                                .frame(width: 50, alignment: .trailing)
+                    //                        }
+                    //                        .padding([.leading, .trailing])
+                    //                    }
                     
-                    Text("Delay Controls")
-                        .font(.headline)
+                    DisclosureGroup("Delay Controls", isExpanded: $isDelayExpanded) {
+                        
+                        HStack {
+                            Text("Time")
+                            Slider(value: Binding(get: {
+                                audioProcessor.delay?.time ?? 1.0
+                            }, set: { newVal in
+                                audioProcessor.delay?.time = newVal
+                            }), in: 0...2, step: 0.01)
+                        }
                         .padding()
-                    HStack {
-                        Text("Time")
-                        Slider(value: Binding(get: {
-                            audioProcessor.delay?.time ?? 1.0
-                        }, set: { newVal in
-                            audioProcessor.delay?.time = newVal
-                        }), in: 0...2, step: 0.01)
+                        HStack {
+                            Text("Feedback")
+                            Slider(value: Binding(get: {
+                                audioProcessor.delay?.feedback ?? 0.0
+                            }, set: { newVal in
+                                audioProcessor.delay?.feedback = newVal
+                            }), in: -100...100, step: 1.0)
+                        }
+                        .padding()
+                        HStack {
+                            Text("lowPassCutoff")
+                            Slider(value: Binding(get: {
+                                audioProcessor.delay?.lowPassCutoff ?? 80
+                            }, set: { newVal in
+                                audioProcessor.delay?.lowPassCutoff = newVal
+                            }), in: 10...200, step: 0.5)
+                        }
+                        .padding()
+                        HStack {
+                            Text("Dry/Wet Mix")
+                            Slider(value: Binding(
+                                get: { self.audioProcessor.delay?.dryWetMix ?? 50 }, // Defaulting to 50 assuming it's a mid-value
+                                set: { newVal in
+                                    self.audioProcessor.delay?.dryWetMix = newVal
+                                }
+                            ), in: 0...100, step: 1)
+                        }
+                        .padding()
                     }
-                    .padding()
-                    HStack {
-                        Text("Feedback")
-                        Slider(value: Binding(get: {
-                            audioProcessor.delay?.feedback ?? 0.0
-                        }, set: { newVal in
-                            audioProcessor.delay?.feedback = newVal
-                        }), in: -100...100, step: 1.0)
-                    }
-                    .padding()
-                    HStack {
-                        Text("lowPassCutoff")
-                        Slider(value: Binding(get: {
-                            audioProcessor.delay?.lowPassCutoff ?? 80
-                        }, set: { newVal in
-                            audioProcessor.delay?.lowPassCutoff = newVal
-                        }), in: 10...200, step: 0.5)
-                    }
-                    .padding()
-
                     DisclosureGroup("Time Pitch", isExpanded: $isTimePitchExpanded) {
                         HStack {
                             Text("Pitch")
@@ -148,10 +161,8 @@ struct AudioView: View {
                         }
                     }
                     
-                    .padding()
-
                     DisclosureGroup("Compressor Controls", isExpanded: $isCompressorExpanded) {
-
+                        
                         HStack {
                             Text("Attack Time")
                             Slider(value: Binding(get: {
@@ -213,7 +224,7 @@ struct AudioView: View {
                             Text("Output Amplitude: \(audioProcessor.compressor?.outputAmplitude ?? 0, specifier: "%.2f") dB")
                         }
                     }
-                    .padding()
+                    
                     DisclosureGroup("Limiter Controls", isExpanded: $isLimiterExpanded) {
                         
                         HStack {
@@ -245,7 +256,6 @@ struct AudioView: View {
                             }), in: 0...1)
                         }
                     }
-                    .padding()
                     //                    DisclosureGroup("3D Sound Controls", isExpanded: $is3DSoundExpanded) {
                     //                         Toggle("Enable 3D Sound", isOn: $is3DSoundEnabled)
                     //

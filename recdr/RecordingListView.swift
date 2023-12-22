@@ -17,9 +17,7 @@ struct RecordingListView: View {
         List {
             ForEach(audioRecorder.recordingsList, id: \.self) { recording in
                 VStack {
-                    
                     HStack {
-                                                
                         Button(action: {
                             if isPlaying && currentlyPlaying == recording {
                                 stopPlayback()
@@ -37,34 +35,29 @@ struct RecordingListView: View {
                             Image(systemName: "square.and.arrow.up")
                         }
                         .buttonStyle(PlainButtonStyle())
-                        
                         Spacer()
-                        
-                        
                     }
                     
                     HStack {
-                        
-                        Text(recording.lastPathComponent)
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            self.selectedRecording = recording
-                            self.isNavigationLinkActive = true
-                        }) {
-                            Image(systemName: "waveform.circle.fill")
+
+                        NavigationLink(destination: AudioView(audioURL: recording)) {
+                            Text("Edit \(recording.lastPathComponent)")
                         }
-                        .buttonStyle(PlainButtonStyle())
+
+//                        Text(recording.lastPathComponent)
+                        
+//                        Spacer()
+                        
+//                        Button(action: {
+//                            self.selectedRecording = recording
+//                            self.isNavigationLinkActive = true
+//                        }) {
+//                            Image(systemName: "waveform.circle.fill")
+//                        }
+//                        .buttonStyle(PlainButtonStyle())
                     }
                     
                 }
-                .background(
-                    NavigationLink(destination: AudioView(audioURL: recording), isActive: $isNavigationLinkActive) {
-                        EmptyView()
-                    }
-                        .hidden()
-                )
             }
             .onDelete(perform: deleteRecording)
         }
