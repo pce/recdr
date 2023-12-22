@@ -17,44 +17,50 @@ struct RecordingListView: View {
         List {
             ForEach(audioRecorder.recordingsList, id: \.self) { recording in
                 VStack {
-                    HStack {
-                        Button(action: {
-                            if isPlaying && currentlyPlaying == recording {
-                                stopPlayback()
-                            } else {
-                                playRecording(recording)
-                            }
-                        }) {
-                            Image(systemName: isPlaying && currentlyPlaying == recording ? "stop.fill" : "play.fill")
-                        }
-                        
-                        Button(action: {
-                            itemToShare = recording
-                            showShareSheet = true
-                        }) {
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        Spacer()
-                    }
                     
                     HStack {
-
+                        
                         NavigationLink(destination: AudioView(audioURL: recording)) {
-                            Text("Edit \(recording.lastPathComponent)")
+                            Text("\(recording.lastPathComponent)")
                         }
-
-//                        Text(recording.lastPathComponent)
                         
-//                        Spacer()
+                    }.swipeActions(edge: .leading, allowsFullSwipe: true) {
+                        if isPlaying && currentlyPlaying == recording {
+                            Button {
+                                // Stop playback action
+                                stopPlayback()
+                            } label: {
+                                Label("Stop", systemImage: "stop.fill")
+                            }
+                            .tint(.red)
+                        } else {
+                            Button {
+                                // Play recording action
+                                playRecording(recording)
+                            } label: {
+                                Label("Play", systemImage: "play.circle")
+                            }
+                            .tint(.green)
+                        }
+                    }
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Button {
+                            // Share recording action
+                            itemToShare = recording
+                            showShareSheet = true
+                        } label: {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
+                        .tint(.blue)
                         
-//                        Button(action: {
-//                            self.selectedRecording = recording
-//                            self.isNavigationLinkActive = true
-//                        }) {
-//                            Image(systemName: "waveform.circle.fill")
-//                        }
-//                        .buttonStyle(PlainButtonStyle())
+                        Button(role: .destructive) {
+                            // Delete recording action
+                            if let indexSet = audioRecorder.recordingsList.firstIndex(of: recording) {
+                                deleteRecording(IndexSet(integer: indexSet))
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
                     }
                     
                 }
