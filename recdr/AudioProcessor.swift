@@ -12,8 +12,10 @@ class AudioProcessor: ObservableObject {
     var timePitch: TimePitch?
     var compressor: Compressor?
     var limiter: PeakLimiter?
+    var lowPassFilter: LowPassFilter?
+    var bandPassFilter: BandPassFilter?
+    var currentFilter: Node? // Node is a common superclass
     
-//    var is3DSoundEnabled = false
     var pan: AUValue = 0.0 {
         didSet {
             mixer?.pan = pan
@@ -43,7 +45,7 @@ class AudioProcessor: ObservableObject {
             print("Player is not initialized")
             return
         }
-        
+
         timePitch = TimePitch(player)
         guard let timePitch = timePitch else {
             print("TimePitch is not initialized")
@@ -55,11 +57,21 @@ class AudioProcessor: ObservableObject {
             print("Reverb is not initialized")
             return
         }
+                
         delay = Delay(reverb)
         guard let delay = delay else {
             print("Delay is not initialized")
             return
         }
+        
+//        lowPassFilter = LowPassFilter(delay)
+        // bandPassFilter = BandPassFilter(delay)
+//        currentFilter = lowPassFilter
+//        guard let currentFilter = currentFilter else {
+//            print("currentFilter is not initialized")
+//            return
+//        }
+//        compressor = Compressor(currentFilter)
 
         compressor = Compressor(delay)
         guard let compressor = compressor else {
@@ -83,6 +95,18 @@ class AudioProcessor: ObservableObject {
         }
     }
 
+//    func switchFilter(to type: FilterType) {
+//        switch type {
+//        case .lowPass:
+//            currentFilter = lowPassFilter
+//        case .bandPass:
+//            currentFilter = bandPassFilter
+//        }
+//
+//        // Reconnect the audio chain with the new filter
+//        setupAudioChain()
+//    }
+    
     private func setupRecorder() {
         guard let mixer = mixer else {
             print("Mixer is not initialized")
@@ -185,4 +209,7 @@ class AudioProcessor: ObservableObject {
 
 }
 
-
+//
+//enum FilterType {
+//    case lowPass, bandPass
+//}

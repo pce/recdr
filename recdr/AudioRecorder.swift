@@ -76,7 +76,7 @@ class AudioRecorder: ObservableObject {
         let audioSettings: [String: Any] = [
             AVFormatIDKey: Int(kAudioFormatLinearPCM),
             AVSampleRateKey: 44100.0,
-            AVNumberOfChannelsKey: 1,
+            AVNumberOfChannelsKey: 1, // TODO make configurable, default: mono
             AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
         ]
 

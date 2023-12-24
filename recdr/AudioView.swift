@@ -14,14 +14,13 @@ struct AudioView: View {
     
     @State private var waveformCursorPosition: CGFloat = 0.0
     
-    //    @State private var is3DSoundExpanded = false
-    //    @State private var is3DSoundEnabled = false
     @State private var xParameter: String = "Pan"
-    @State private var yParameter: String = "Filter"
+    @State private var yParameter: String = "Fltr"
     @State private var xyPadPosition: CGPoint = CGPoint(x: 0.5, y: 0.5)
     
-    let parameterOptions = ["Pan", "Filter", "Pitch"]
-    
+//    let parameterOptions = ["Pan", "Fltr", "DelFB", "DelTme", "Pitch"]
+    let parameterOptions = ["Pan", "Fltr", "Pitch"]
+
     var audioURL: URL
     
     
@@ -256,15 +255,7 @@ struct AudioView: View {
                             }), in: 0...1)
                         }
                     }
-                    //                    DisclosureGroup("3D Sound Controls", isExpanded: $is3DSoundExpanded) {
-                    //                         Toggle("Enable 3D Sound", isOn: $is3DSoundEnabled)
-                    //
-                    //                         if is3DSoundEnabled {
-                    //                            // XY Pad?
-                    //                         }
-                    //                     }
-                    //                     .padding()
-                    
+
                     VStack {
                         Picker("X Axis", selection: $xParameter) {
                             ForEach(parameterOptions, id: \.self) {
@@ -287,6 +278,7 @@ struct AudioView: View {
                                 updateAudioParameters(xParam: xParameter, yParam: yParameter, position: newPosition)
                             }
                     }
+                    
                 }
             }
             
@@ -304,10 +296,16 @@ struct AudioView: View {
         case "Pan":
             let panValue = (xValue * 2) - 1 // Convert from 0...1 to -1...1
             audioProcessor.pan = panValue
-        case "Filter":
+        case "Fltr":
             // 10 to 200 (Default: 80)
             let filterValue = (xValue * 190) + 10
             audioProcessor.delay?.lowPassCutoff = filterValue
+        case "DelTme":
+            let delayTime = (xValue)
+            audioProcessor.delay?.time = delayTime
+        case "DelFB":
+            let delayFeedback = (xValue * 200) - 100
+            audioProcessor.delay?.feedback = delayFeedback
         case "Pitch":
             let pitchValue = (xValue * 4800) - 2400 // Convert from 0...1 to -2400...2400
             audioProcessor.timePitch?.pitch = pitchValue
@@ -319,10 +317,16 @@ struct AudioView: View {
         case "Pan":
             let panValue = (yValue * 2) - 1 // Convert from 0...1 to -1...1
             audioProcessor.pan = panValue
-        case "Filter":
+        case "Fltr":
             // 10 to 200 (Default: 80)
             let filterValue = (yValue * 190) + 10
             audioProcessor.delay?.lowPassCutoff = filterValue
+        case "DelTme":
+            let delayTime = (xValue)
+            audioProcessor.delay?.time = delayTime
+        case "DelFB":
+            let delayFeedback = (xValue * 200) - 100
+            audioProcessor.delay?.feedback = delayFeedback
         case "Pitch":
             let pitchValue = (yValue * 4800) - 2400 // Convert from 0...1 to -2400...2400
             audioProcessor.timePitch?.pitch = pitchValue
@@ -331,3 +335,13 @@ struct AudioView: View {
         }
     }
 }
+
+
+//enum XYControlParameter {
+//    case pan
+//    case filterFrequency
+//    case delayTime
+//    case delayFeedback
+//    case pitch
+//}
+
