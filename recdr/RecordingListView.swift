@@ -82,6 +82,8 @@ struct RecordingListView: View {
                         audioRecorder.fetchRecordings()
                     }
                 }
-        )
+        ).onAppear {
+            audioRecorder.fetchRecordings()
+        }
     }
 }

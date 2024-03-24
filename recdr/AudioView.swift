@@ -1,6 +1,24 @@
 import SwiftUI
 import AVFoundation
 
+// Custom Button Style for the Record Button
+struct RecordButtonStyle: ButtonStyle {
+    var isRecording: Bool
+
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(isRecording ? Color.red : Color.gray)
+            .clipShape(Circle())
+            .foregroundColor(.white)
+            .overlay(
+                Circle()
+                    .stroke(Color.white, lineWidth: 2)
+            )
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+    }
+}
+
 struct AudioView: View {
     @StateObject private var audioProcessor = AudioProcessor()
     @State private var isPlaying = false
@@ -26,6 +44,30 @@ struct AudioView: View {
     
     var body: some View {
         VStack {
+            
+            
+            // Play/Stop Button
+            Button(action: {
+                if isPlaying {
+                    audioProcessor.player?.stop()
+                } else {
+                    audioProcessor.play()
+                }
+                isPlaying.toggle()
+            }) {
+                HStack {
+                    Image(systemName: isPlaying ? "stop.fill" : "play.fill")
+                        .foregroundColor(.white)
+                    Text(isPlaying ? "Stop" : "Play")
+                        .foregroundColor(.white)
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(isPlaying ? Color.pink : Color.blue)
+                .cornerRadius(10)
+            }
+
+            /*
             Button(isPlaying ? "Stop" : "Play") {
                 if isPlaying {
                     audioProcessor.player?.stop()
@@ -34,8 +76,22 @@ struct AudioView: View {
                 }
                 isPlaying.toggle()
             }
+            */
             
+            // Record/Stop Recording Button
+             if audioProcessor.isRecording {
+                 Button("Stop", action: {
+                     audioProcessor.stopRecordingAndSave()
+                 })
+                 .buttonStyle(RecordButtonStyle(isRecording: audioProcessor.isRecording))
+             } else {
+                 Button("Rec", action: {
+                     audioProcessor.startRecording()
+                 })
+                 .buttonStyle(RecordButtonStyle(isRecording: audioProcessor.isRecording))
+             }
             
+            /*
             if audioProcessor.isRecording {
                 Button("Stop Render to File") {
                     audioProcessor.stopRecordingAndSave()
@@ -46,6 +102,7 @@ struct AudioView: View {
                 }
                 
             }
+            */
             
             HStack {
                 WaveformView(audioURL: audioURL, cursorPosition: $waveformCursorPosition)
